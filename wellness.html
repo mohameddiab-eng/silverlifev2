@@ -58,8 +58,7 @@
     <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
         <div class="flex items-center gap-2">
             <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
-                <i class="fas fa-bars text-lg"></i> <!-- Hamburger Menu Icon -->
-            </button>
+                <i class="fas fa-bars text-lg"></i> </button>
             <img src="SA.png" alt="Wellness Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
             <h1 class="text-2xl font-bold truncate">Exercise & Wellness</h1>
         </div>
@@ -116,7 +115,6 @@
                 </li>
             </ul>
 
-            <!-- Categorized Exercise Videos -->
             <h2 class="text-xl font-bold mb-3 text-pink-800 mt-6">Categorized Exercise Videos</h2>
             <div class="grid grid-cols-1 gap-4">
                 
@@ -124,7 +122,7 @@
                     <h3 class="font-bold text-lg mb-2">Chair Exercises for Seniors - Beginner Full Body Workout</h3>
                     <div class="video-wrapper mb-3">
                         <iframe width="560" height="315"
-                            src="https://www.youtube.com/watch?v=ntDLjoJMHk8"
+                            src="https://www.youtube.com/embed/ntDLjoJMHk8" 
                             title="Chair Exercises for Seniors - Beginner Full Body Workout"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -132,31 +130,28 @@
                             referrerpolicy="strict-origin-when-cross-origin"
                         ></iframe>
                     </div>
-                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=twD_p-GbdkY', '_blank')">Watch Now</button>
+                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=ntDLjoJMHk8', '_blank')">Watch Now</button>
                 </div>
 
-                <!-- Example Video 2: Leg Strength, 5-10 min -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-pink-400">
                     <h3 class="font-bold text-lg mb-2">Seated Exercise for Seniors & Beginners with dumbbells (or water bottles)</h3>
                     <div class="video-wrapper mb-3">
                         <iframe width="560" height="315"
-                            src="https://www.youtube.com/embed/sSnWkSh-9K"
-                            title="Seated Exercise for Seniors & Beginners with dumbbells"
+                            src="https://www.youtube.com/embed/x6wiDew4sYU" title="Seated Exercise for Seniors & Beginners with dumbbells"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
                             referrerpolicy="strict-origin-when-cross-origin"
                         ></iframe>
                     </div>
-                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=ml9a_f2_jF8', '_blank')">Watch Now</button>
+                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=x6wiDew4sYU', '_blank')">Watch Now</button>
                 </div>
 
-                <!-- Example Video 3: Full Body, 20-30 min -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-pink-400">
                     <h3 class="font-bold text-lg mb-2">Gentle Standing Pilates for Seniors</h3>
                     <div class="video-wrapper mb-3">
                         <iframe width="560" height="315"
-                            src="https://www.youtube.com/embed/jReivdS83Mo"
+                            src="https://www.youtube.com/embed/jReivdS83Mo" 
                             title="Gentle Standing Pilates for Seniors"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -176,7 +171,6 @@
             applyAccessSettings();
         });
     </script>
-    <!-- Sidebar Menu -->
     <div id="sidebar-menu">
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">Menu</h2>
@@ -193,7 +187,6 @@
         
     </div>
 
-    <!-- Menu Overlay -->
     <div id="menu-overlay"></div>
 </body>
 </html>
