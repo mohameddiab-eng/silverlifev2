@@ -1,0 +1,323 @@
+:root {
+    --bg-color: #f3f4f6;
+    --text-color: #1f2937;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --bg-image: none; /* Default to none, set specifically on body.home-theme */
+}
+
+/* Base styles */
+html {
+    font-size: 100%;
+    transition: font-size 0.2s ease;
+}
+
+/* --- ACCESSIBILITY THEMES --- */
+html.text-lg-mode { font-size: 115%; }
+html.text-xl-mode { font-size: 130%; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    background-color: var(--bg-color);
+    /* background-image: var(--bg-image); This will be set on body.home-theme */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Home Screen Background Image - updated to use the direct style from index.html */
+body.home-theme {
+    background-image: url('https://images.unsplash.com/photo-1544903342-995a97576569?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Section Specific Themes */
+body.meds-theme { background-color: #dbeafe; background-image: none; } /* Blue-50 */
+body.contacts-theme { background-color: #dcfce7; background-image: none; } /* Green-50 */
+body.tasks-theme { background-color: #ffedd5; background-image: none; } /* Orange-50 */
+body.shop-theme { background-color: #ecfccb; background-image: none; } /* Lime-50 */
+body.wellness-theme { background-color: #fce7f3; background-image: none; } /* Pink-50 */
+body.schedule-theme { background-color: #e0e7ff; background-image: none; } /* Indigo-50 */
+body.notes-theme { background-color: #fef9c3; background-image: none; } /* Yellow-50 */
+
+/* Light Mode (Forces clean white/gray look) */
+body.light-mode {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --card-bg: #f3f4f6;
+    background-image: none; /* Override image explicitly */
+}
+
+/* Dark Mode */
+body.dark-mode {
+    --bg-color: #1f2937;
+    --text-color: #f3f4f6;
+    --card-bg: #111827;
+    --border-color: #374151;
+    background-image: none;
+}
+.dark-mode .bg-white { background-color: var(--card-bg) !important; color: var(--text-color) !important; border-color: var(--border-color); }
+.dark-mode .text-gray-800 { color: #f3f4f6 !important; }
+.dark-mode .text-gray-500, .dark-mode .text-gray-600 { color: #9ca3af !important; }
+.dark-mode .bg-gray-800 { background-color: #000 !important; }
+.dark-mode input, .dark-mode textarea { 
+    background-color: #374151 !important; 
+    color: white !important; 
+    border-color: #4b5563 !important; 
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    --bg-color: #000000;
+    --text-color: #fbbf24;
+    --card-bg: #111111;
+    --border-color: #fbbf24;
+    background-image: none;
+}
+.high-contrast .bg-white { background-color: #111111 !important; color: #fbbf24 !important; border: 2px solid #fbbf24; }
+.high-contrast .text-gray-800, .high-contrast .text-gray-500, .high-contrast .text-gray-600 { color: #fbbf24 !important; }
+.high-contrast button { border: 2px solid #fbbf24 !important; }
+.high-contrast input, .high-contrast textarea { 
+    background-color: #000 !important; 
+    color: #fbbf24 !important; 
+    border: 2px solid #fbbf24 !important; 
+}
+
+.page-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.page-section.active {
+    display: block;
+    /* padding-bottom: 140px; Removed as bottom nav is gone */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tap-effect:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+    transition: transform 0.1s;
+}
+
+/* Hamburger Menu Styles */
+#sidebar-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background: white;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 45;
+    padding-top: 60px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar-menu.open {
+    transform: translateX(0);
+}
+
+#sidebar-menu .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #1f2937;
+    font-size: 1.1em;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid #e5e7eb;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#sidebar-menu .menu-item:last-child {
+    border-bottom: none;
+}
+
+#sidebar-menu .menu-item i {
+    margin-right: 15px;
+    color: #0d9488;
+    font-size: 1.3em;
+}
+
+#sidebar-menu .menu-item:hover {
+    background-color: #f3f4f6;
+    color: #0d9488;
+}
+
+/* Overlay for when menu is open */
+#menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+    display: none;
+}
+
+#menu-overlay.open {
+    display: block;
+}
+
+/* Enhanced Hover Effects for Navigation Buttons */
+.nav-btn {
+    position: relative;
+    color: var(--text-color);
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-btn:hover {
+    color: #0d9488; /* Teal-600 for hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.nav-btn.active-nav {
+    color: #0d9488; /* Active color */
+}
+
+/* Add a simple indicator for active navigation item */
+.nav-btn.active-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 5px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 3px;
+    background-color: #0d9488;
+    border-radius: 2px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: end;
+    z-index: 50;
+}
+
+.modal.open { display: flex; }
+
+.modal-content {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px 20px 0 0;
+    padding: 24px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: var(--text-color);
+}
+
+#access-bar {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    width: 250px;
+    background: white;
+    box-shadow: -4px 4px 20px rgba(0,0,0,0.2);
+    border-radius: 0 0 0 20px;
+    transform: translateX(120%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 40;
+    padding: 20px;
+    border: 2px solid #0d9488;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+#access-bar.open { transform: translateX(0); }
+
+.call-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+    z-index: 100;
+    display: none;
+    flex-col: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 20px;
+    color: white;
+}
+
+.call-screen.active { display: flex; animation: fadeIn 0.3s; }
+
+.call-avatar {
+    width: 120px;
+    height: 120px;
+    background: #374151;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.pulse-ring { animation: pulse-ring 2s infinite; }
+
+@keyframes pulse-ring {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.digital-font {
+    font-family: 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Styles for the app logo image */
+.app-logo {
+    max-width: 100%; /* Ensure logo scales down within its container */
+    height: auto;    /* Maintain aspect ratio */
+    display: block;  /* Remove extra space below the image */
+}

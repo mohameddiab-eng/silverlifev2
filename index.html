@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SilverLife Companion</title>
+    <meta name="theme-color" content="#0d9488">
+    <meta name="description" content="Simple daily management for seniors">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght400;600;800&family=Digital+Numbers&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../style/style.css"> <!-- Updated path -->
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../SA.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../SA.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../SA.png">
+</head>
+<body class="h-screen overflow-hidden flex flex-col home-theme transition-all duration-500">
+
+    <div id="splash" class="fixed inset-0 bg-teal-600 z-[100] flex flex-col items-center justify-center text-white transition-opacity duration-700">
+        <img src="../SA.png" alt="App Logo" class="w-20 h-20 mb-4 rounded-full shadow-lg app-logo"> <!-- Updated path -->
+        <h1 class="text-3xl font-bold">SilverLife</h1>
+        <p class="mt-2 text-teal-100">Loading...</p>
+    </div>
+
+    <div id="access-bar">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h3 class="font-bold text-lg text-gray-800">Accessibility</h3>
+            <button onclick="toggleAccessBar()" class="text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Text Size</p>
+            <div class="flex gap-2">
+                <button onclick="setAccess('size', 'normal')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-sm hover:bg-gray-300">A</button>
+                <button onclick="setAccess('size', 'large')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-lg font-bold hover:bg-gray-300">A+</button>
+                <button onclick="setAccess('size', 'xl')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-xl font-bold hover:bg-gray-300">A++</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Display Mode</p>
+            <div class="space-y-2">
+                <button onclick="setAccess('mode', 'light')" class="w-full bg-white text-gray-800 p-3 rounded font-bold border border-gray-300 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-sun text-yellow-500"></i> Light Mode
+                </button>
+                 <button onclick="setAccess('mode', 'dark')" class="w-full bg-gray-800 text-white p-3 rounded font-bold border border-gray-600 flex items-center justify-center gap-2">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button onclick="setAccess('mode', 'contrast')" class="w-full bg-black text-yellow-400 p-3 rounded font-bold border-2 border-yellow-400 flex items-center justify-center gap-2">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Voice Assistant</p>
+            <div class="flex gap-2">
+                <button onclick="readPage()" class="flex-1 bg-blue-100 text-blue-800 p-3 rounded font-bold flex items-center justify-center gap-2 hover:bg-blue-200">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+                <button onclick="stopReading()" class="w-16 bg-red-100 text-red-800 p-3 rounded font-bold flex items-center justify-center hover:bg-red-200">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
+
+        <button onclick="setAccess('reset')" class="w-full bg-gray-200 text-gray-700 p-3 rounded font-bold mt-4 hover:bg-gray-300 border border-gray-300">
+            <i class="fas fa-undo mr-1"></i> Reset Settings
+        </button>
+    </div>
+
+    <div id="fake-call-screen" class="call-screen">
+        <div class="flex flex-col items-center w-full">
+            <div class="call-avatar pulse-ring">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2 id="call-name" class="text-3xl font-bold mb-2">Contact Name</h2>
+            <p id="call-status" class="text-gray-400 text-lg">Calling...</p>
+        </div>
+        
+        <div class="w-full flex justify-around items-center">
+            <button class="flex flex-col items-center opacity-50">
+                <div class="w-16 h-16 rounded-full border border-gray-600 flex items-center justify-center mb-2">
+                    <i class="fas fa-volume-up text-2xl"></i>
+                </div>
+                <span>Speaker</span>
+            </button>
+            <button class="flex flex-col items-center opacity-50">
+                <div class="w-16 h-16 rounded-full border border-gray-600 flex items-center justify-center mb-2">
+                    <i class="fas fa-video text-2xl"></i>
+                </div>
+                <span>Video</span>
+            </button>
+            <button class="flex flex-col items-center opacity-50">
+                <div class="w-16 h-16 rounded-full border border-gray-600 flex items-center justify-center mb-2">
+                    <i class="fas fa-microphone-slash text-2xl"></i>
+                </div>
+                <span>Mute</span>
+            </button>
+        </div>
+
+        <button onclick="endFakeCall()" class="bg-red-600 w-20 h-20 rounded-full flex items-center justify-center shadow-lg tap-effect mb-8">
+            <i class="fas fa-phone-slash text-3xl"></i>
+        </button>
+    </div>
+
+    <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
+        <div class="flex items-center gap-2">
+            <img src="../SA.png" alt="App Logo" class="w-8 h-8 rounded-full mr-2 app-logo"> <!-- Updated path and size adjusted via CSS -->
+            <h1 id="page-title" class="text-2xl font-bold truncate">SilverLife</h1>
+        </div>
+        <div class="flex gap-3">
+            <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
+                <i class="fas fa-bars text-lg"></i> <!-- Hamburger Menu Icon -->
+            </button>
+            <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
+                <i class="fas fa-eye text-lg"></i>
+            </button>
+            <button onclick="installApp()" id="install-btn" class="hidden text-xs bg-teal-800 px-3 py-1 rounded-full"><i class="fas fa-download mr-1"></i> Install</button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+        </div>
+        <a href="../html/shop.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Shop List</a> <!-- Updated path -->
+        <a href="../html/wellness.html" class="menu-item"><i class="fas fa-heart"></i> Exercise</a> <!-- Updated path -->
+        <a href="../html/contacts.html" class="menu-item"><i class="fas fa-phone"></i> Call</a> <!-- Updated path -->
+        <a href="../html/meds.html" class="menu-item"><i class="fas fa-pills"></i> Medicine</a> <!-- Updated path -->
+        <a href="../html/schedule.html" class="menu-item"><i class="fas fa-list-alt"></i> Schedule</a> <!-- Updated path -->
+        <a href="../html/tasks.html" class="menu-item"><i class="fas fa-check"></i> To-Do</a> <!-- Updated path -->
+        <a href="../html/notes.html" class="menu-item"><i class="fas fa-pen"></i> My Diary</a> <!-- Updated path -->
+        <!-- Add more menu items here -->
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay"></div>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative" id="app-container">
+        
+        <section id="home" class="page-section active">
+            <div class="bg-gray-800/90 text-white p-6 rounded-3xl shadow-lg mb-6 text-center border-4 border-gray-700 backdrop-blur-sm">
+                <div class="text-gray-300 text-base uppercase tracking-widest mb-2" id="clock-weekday"></div>
+                <div class="text-gray-300 text-lg uppercase tracking-widest mb-3" id="clock-date-full"></div>
+                <div class="flex justify-center items-baseline gap-1">
+                    <div class="text-6xl font-bold digital-font text-teal-300 tracking-wider" id="clock-hours"></div>
+                    <div class="text-6xl font-bold digital-font text-teal-300 tracking-wider">:</div>
+                    <div class="text-6xl font-bold digital-font text-teal-300 tracking-wider" id="clock-minutes"></div>
+                    <div class="text-6xl font-bold digital-font text-teal-300 tracking-wider">:</div>
+                    <div class="text-4xl font-bold digital-font text-teal-300" id="clock-seconds"></div>
+                    <div class="text-gray-300 text-xl ml-2" id="clock-ampm"></div>
+                </div>
+                <div class="text-gray-300 text-sm mt-2" id="clock-year"></div>
+            </div>
+
+            <!-- Hebrew Newspaper Iframe -->
+            <div class="bg-white p-4 rounded-2xl shadow-lg mb-6 text-center" id="news-feed-container">
+                <h2 class="text-xl font-bold mb-3 text-gray-800">BBC News</h2>
+                <div id="ynet-rss-feed" class="text-left space-y-3"></div>
+                <p class="text-gray-600 mt-4 text-sm">Click on a headline to read the full article.</p>
+            </div>
+
+        </section>
+
+        <!-- Quote of the Day / Tip for Seniors -->
+        <section class="page-section" id="daily-tip-section">
+            <div class="bg-blue-50/90 p-6 rounded-3xl shadow-lg mb-6 text-center border-4 border-blue-100 backdrop-blur-sm">
+                <h3 class="text-xl font-bold mb-3 text-blue-900">💡 Tip for a Healthy Day!</h3>
+                <p id="daily-tip-content" class="text-gray-700 text-lg italic">"Stay hydrated! Drink plenty of water throughout the day to keep your body and mind refreshed."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-teal-700 text-white p-4 text-center text-sm shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <p>&copy; 2025 SilverLife App. All rights reserved.</p>
+        <p class="mt-1"><a href="#" class="text-teal-200 hover:underline">Privacy Policy</a> | <a href="#" class="text-teal-200 hover:underline">Terms of Service</a></p>
+    </footer>
+
+    <script src="../script/script.js"></script> <!-- Updated path -->
+</body>
+</html>

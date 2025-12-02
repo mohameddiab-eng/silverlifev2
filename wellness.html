@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wellness & Exercise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body class="h-screen overflow-hidden flex flex-col wellness-theme transition-all duration-500">
+    <div id="access-bar">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h3 class="font-bold text-lg text-gray-800">Accessibility</h3>
+            <button onclick="toggleAccessBar()" class="text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Text Size</p>
+            <div class="flex gap-2">
+                <button onclick="setAccess('size', 'normal')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-sm hover:bg-gray-300">A</button>
+                <button onclick="setAccess('size', 'large')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-lg font-bold hover:bg-gray-300">A+</button>
+                <button onclick="setAccess('size', 'xl')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-xl font-bold hover:bg-gray-300">A++</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Display Mode</p>
+            <div class="space-y-2">
+                <button onclick="setAccess('mode', 'light')" class="w-full bg-white text-gray-800 p-3 rounded font-bold border border-gray-300 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-sun text-yellow-500"></i> Light Mode
+                </button>
+                 <button onclick="setAccess('mode', 'dark')" class="w-full bg-gray-800 text-white p-3 rounded font-bold border border-gray-600 flex items-center justify-center gap-2">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button onclick="setAccess('mode', 'contrast')" class="w-full bg-black text-yellow-400 p-3 rounded font-bold border-2 border-yellow-400 flex items-center justify-center gap-2">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Voice Assistant</p>
+            <div class="flex gap-2">
+                <button onclick="readPage()" class="flex-1 bg-blue-100 text-blue-800 p-3 rounded font-bold flex items-center justify-center gap-2 hover:bg-blue-200">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+                <button onclick="stopReading()" class="w-16 bg-red-100 text-red-800 p-3 rounded font-bold flex items-center justify-center hover:bg-red-200">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
+
+        <button onclick="setAccess('reset')" class="w-full bg-gray-200 text-gray-700 p-3 rounded font-bold mt-4 hover:bg-gray-300 border border-gray-300">
+            <i class="fas fa-undo mr-1"></i> Reset Settings
+        </button>
+    </div>
+    <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
+        <div class="flex items-center gap-2">
+            <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
+                <i class="fas fa-bars text-lg"></i> <!-- Hamburger Menu Icon -->
+            </button>
+            <img src="../SA.png" alt="Wellness Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
+            <h1 class="text-2xl font-bold truncate">Exercise & Wellness</h1>
+        </div>
+        <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
+            <i class="fas fa-eye text-lg"></i>
+        </button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative">
+        <section id="wellness" class="page-section active">
+            <h2 class="text-xl font-bold mb-3 text-pink-800">Relaxing Piano</h2>
+            <div class="video-wrapper shadow-lg mb-6">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/3dhShorDjOg?controls=1&rel=0" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen
+                    referrerpolicy="strict-origin-when-cross-origin"
+                ></iframe>
+            </div>
+
+            <h2 class="text-xl font-bold mb-3 text-pink-800">Meditation & Breathing</h2>
+             <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-pink-400 mb-6">
+                <h3 class="font-bold text-lg mb-2">1 Minute Breathing</h3>
+                <p class="text-gray-600 mb-4">Breathe in for 4 seconds, hold for 4, exhale for 4.</p>
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden relative">
+                    <div id="breath-bar" class="bg-pink-400 h-4 w-0 transition-all duration-[4000ms] ease-linear"></div>
+                </div>
+                <button onclick="startBreathing()" class="mt-4 w-full bg-pink-100 text-pink-800 font-bold py-3 rounded-xl tap-effect">Start Breathing Exercise</button>
+            </div>
+
+            <h2 class="text-xl font-bold mb-3 text-pink-800">Simple Exercises</h2>
+            <ul class="space-y-3">
+                <li class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                    <i class="fas fa-walking text-3xl text-pink-500 mr-4 w-10 text-center"></i>
+                    <span class="text-lg font-medium">10 Min Walk</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                    <i class="fas fa-chair text-3xl text-pink-500 mr-4 w-10 text-center"></i>
+                    <span class="text-lg font-medium">Chair Sit-to-Stand</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                    <i class="fas fa-spa text-3xl text-pink-500 mr-4 w-10 text-center"></i>
+                    <span class="text-lg font-medium">Gentle Yoga</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                    <i class="fas fa-dumbbell text-3xl text-pink-500 mr-4 w-10 text-center"></i>
+                    <span class="text-lg font-medium">Light Weights</span>
+                </li>
+                <li class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                    <i class="fas fa-water text-3xl text-pink-500 mr-4 w-10 text-center"></i>
+                    <span class="text-lg font-medium">Water Aerobics</span>
+                </li>
+            </ul>
+
+            <!-- Categorized Exercise Videos -->
+            <h2 class="text-xl font-bold mb-3 text-pink-800 mt-6">Categorized Exercise Videos</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <!-- Example Video 1: Back Muscles, 10-20 min -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-pink-400">
+                    <h3 class="font-bold text-lg mb-2">Gentle Back Stretch</h3>
+                    <p class="text-gray-600 text-sm mb-2">Duration: 15 min | Muscle Group: Back</p>
+                    <div class="video-wrapper mb-3">
+                        <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/2_gNq1k15m4?controls=1&rel=0" 
+                            title="Gentle Back Stretch for Seniors" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            referrerpolicy="strict-origin-when-cross-origin"
+                        ></iframe>
+                    </div>
+                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=f0Q_T-22F_w', '_blank')">Watch Now</button>
+                </div>
+
+                <!-- Example Video 2: Leg Strength, 5-10 min -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-pink-400">
+                    <h3 class="font-bold text-lg mb-2">Chair Leg Lifts</h3>
+                    <p class="text-gray-600 text-sm mb-2">Duration: 8 min | Muscle Group: Legs</p>
+                    <div class="video-wrapper mb-3">
+                        <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/bxY4Qx8pD4E?controls=1&rel=0" 
+                            title="Seated Leg Exercises for Seniors" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            referrerpolicy="strict-origin-when-cross-origin"
+                        ></iframe>
+                    </div>
+                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=bxY4Qx8pD4E', '_blank')">Watch Now</button>
+                </div>
+
+                <!-- Example Video 3: Full Body, 20-30 min -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-pink-400">
+                    <h3 class="font-bold text-lg mb-2">Senior Full Body Workout</h3>
+                    <p class="text-gray-600 text-sm mb-2">Duration: 25 min | Muscle Group: Full Body</p>
+                    <div class="video-wrapper mb-3">
+                        <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/ml6cT4AZQWQ?controls=1&rel=0" 
+                            title="25 Min Senior Full Body Workout" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            referrerpolicy="strict-origin-when-cross-origin"
+                        ></iframe>
+                    </div>
+                    <button class="w-full bg-pink-100 text-pink-800 font-bold py-2 rounded-xl tap-effect text-sm" onclick="window.open('https://www.youtube.com/watch?v=ml6cT4AZQWQ', '_blank')">Watch Now</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <script src="../script/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAccessSettings();
+        });
+    </script>
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+        </div>
+        <a href="../html/index.html" class="menu-item"><i class="fas fa-home"></i> Home</a>
+        <a href="../html/shop.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Shop List</a>
+        <a href="../html/wellness.html" class="menu-item"><i class="fas fa-heart"></i> Exercise</a>
+        <a href="../html/contacts.html" class="menu-item"><i class="fas fa-phone"></i> Call</a>
+        <a href="../html/meds.html" class="menu-item"><i class="fas fa-pills"></i> Medicine</a>
+        <a href="../html/schedule.html" class="menu-item"><i class="fas fa-list-alt"></i> Schedule</a>
+        <a href="../html/tasks.html" class="menu-item"><i class="fas fa-check"></i> To-Do</a>
+        <a href="../html/notes.html" class="menu-item"><i class="fas fa-pen"></i> My Diary</a>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay"></div>
+</body>
+</html>
