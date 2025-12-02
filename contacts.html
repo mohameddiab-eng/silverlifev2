@@ -6,7 +6,7 @@
     <title>Contacts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="h-screen overflow-hidden flex flex-col contacts-theme transition-all duration-500">
     <div id="access-bar">
@@ -83,9 +83,21 @@
                 </div>
                 <span class="text-white text-sm">Mute</span>
             </button>
+            <button id="volume-down-button" onclick="decreaseVolume()" class="flex flex-col items-center text-gray-400">
+                <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-2">
+                    <i class="fas fa-volume-down text-2xl text-white"></i>
+                </div>
+                <span class="text-white text-sm">Vol -</span>
+            </button>
+            <button id="volume-up-button" onclick="increaseVolume()" class="flex flex-col items-center text-gray-400">
+                <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-2">
+                    <i class="fas fa-volume-up text-2xl text-white"></i>
+                </div>
+                <span class="text-white text-sm">Vol +</span>
+            </button>
         </div>
  
-        <button onclick="endFakeCall()" class="bg-red-500 w-20 h-20 rounded-full flex items-center justify-center shadow-lg tap-effect mb-8">
+        <button onclick="endFakeCall()" class="bg-red-500 w-20 h-20 rounded-full flex items-center justify-center shadow-lg tap-effect mt-8">
             <i class="fas fa-phone-slash text-3xl text-white"></i>
         </button>
     </div>
@@ -94,7 +106,7 @@
             <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
                 <i class="fas fa-bars text-lg"></i> <!-- Hamburger Menu Icon -->
             </button>
-            <img src="../SA.png" alt="Contacts Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
+            <img src="SA.png" alt="Contacts Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
             <h1 class="text-2xl font-bold truncate">Call</h1>
         </div>
         <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
@@ -126,8 +138,8 @@
         </div>
     </div>
 
-    <script src="../script/script.js"></script>
-    <audio id="ringtone-audio" src="../script/iphone_ringtone.mp3" loop preload="auto"></audio>
+    <script src="script.js"></script>
+    <audio id="ringtone-audio" src="apple_ringtone.mp3" loop preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             applyAccessSettings();
@@ -138,14 +150,14 @@
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">Menu</h2>
         </div>
-        <a href="../html/index.html" class="menu-item"><i class="fas fa-home"></i> Home</a>
-        <a href="../html/shop.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Shop List</a>
-        <a href="../html/wellness.html" class="menu-item"><i class="fas fa-heart"></i> Exercise</a>
-        <a href="../html/contacts.html" class="menu-item"><i class="fas fa-phone"></i> Call</a>
-        <a href="../html/meds.html" class="menu-item"><i class="fas fa-pills"></i> Medicine</a>
-        <a href="../html/schedule.html" class="menu-item"><i class="fas fa-list-alt"></i> Schedule</a>
-        <a href="../html/tasks.html" class="menu-item"><i class="fas fa-check"></i> To-Do</a>
-        <a href="../html/notes.html" class="menu-item"><i class="fas fa-pen"></i> My Diary</a>
+        <a href="index.html" class="menu-item home-bg"><i class="fas fa-home"></i> Home</a>
+        <a href="shop.html" class="menu-item shop-bg"><i class="fas fa-shopping-cart"></i> Shop List</a>
+        <a href="wellness.html" class="menu-item wellness-bg"><i class="fas fa-heart"></i> Exercise</a>
+        <a href="contacts.html" class="menu-item contacts-bg"><i class="fas fa-phone"></i> Call</a>
+        <a href="meds.html" class="menu-item meds-bg"><i class="fas fa-pills"></i> Medicine</a>
+        <a href="schedule.html" class="menu-item schedule-bg"><i class="fas fa-list-alt"></i> Schedule</a>
+        <a href="tasks.html" class="menu-item tasks-bg"><i class="fas fa-check"></i> To-Do</a>
+        <a href="notes.html" class="menu-item notes-bg"><i class="fas fa-pen"></i> My Diary</a>
     </div>
 
     <!-- Menu Overlay -->

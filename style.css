@@ -142,6 +142,8 @@ body.high-contrast {
     text-decoration: none;
     border-bottom: 1px solid #e5e7eb;
     transition: background-color 0.2s ease, color 0.2s ease;
+    position: relative; /* Needed for pseudo-element positioning */
+    overflow: hidden;   /* Hide overflow from pseudo-element */
 }
 
 #sidebar-menu .menu-item:last-child {
@@ -152,12 +154,45 @@ body.high-contrast {
     margin-right: 15px;
     color: #0d9488;
     font-size: 1.3em;
+    z-index: 2; /* Keep icon and text above background image */
+    position: relative;
 }
 
 #sidebar-menu .menu-item:hover {
     background-color: #f3f4f6;
     color: #0d9488;
 }
+
+/* Common pseudo-element for background images */
+/* Needs to be before specific menu item styles so specific ones can override */
+#sidebar-menu .menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.1; /* Adjust opacity as needed */
+    z-index: 1; /* Place behind text and icon */
+    transition: opacity 0.3s ease; /* Smooth transition for hover */
+}
+
+#sidebar-menu .menu-item:hover::before {
+    opacity: 0.15; /* Slightly more opaque on hover for visual feedback */
+}
+
+/* Specific background images for each menu item */
+#sidebar-menu .home-bg::before { background-image: url('home-menu-bg.png'); }
+#sidebar-menu .shop-bg::before { background-image: url('shop-menu-bg.png'); }
+#sidebar-menu .wellness-bg::before { background-image: url('wellness-menu-bg.png'); }
+#sidebar-menu .contacts-bg::before { background-image: url('contacts-menu-bg.png'); }
+#sidebar-menu .meds-bg::before { background-image: url('meds-menu-bg.png'); }
+#sidebar-menu .schedule-bg::before { background-image: url('schedule-menu-bg.png'); }
+#sidebar-menu .tasks-bg::before { background-image: url('tasks-menu-bg.png'); }
+#sidebar-menu .notes-bg::before { background-image: url('notes-menu-bg.png'); }
 
 /* Overlay for when menu is open */
 #menu-overlay {

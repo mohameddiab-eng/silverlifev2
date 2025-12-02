@@ -13,16 +13,16 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght400;600;800&family=Digital+Numbers&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../style/style.css"> <!-- Updated path -->
+    <link rel="stylesheet" href="style.css">
   
-    <link rel="apple-touch-icon" sizes="180x180" href="../SA.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../SA.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../SA.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="SA.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="SA.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="SA.png">
 </head>
 <body class="h-screen overflow-hidden flex flex-col home-theme transition-all duration-500">
 
     <div id="splash" class="fixed inset-0 bg-teal-600 z-[100] flex flex-col items-center justify-center text-white transition-opacity duration-700">
-        <img src="../SA.png" alt="App Logo" class="w-20 h-20 mb-4 rounded-full shadow-lg app-logo"> <!-- Updated path -->
+        <img src="SA.png" alt="App Logo" class="w-20 h-20 mb-4 rounded-full shadow-lg app-logo">
         <h1 class="text-3xl font-bold">SilverLife</h1>
         <p class="mt-2 text-teal-100">Loading...</p>
     </div>
@@ -111,7 +111,7 @@
 
     <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
         <div class="flex items-center gap-2">
-            <img src="../SA.png" alt="App Logo" class="w-8 h-8 rounded-full mr-2 app-logo"> <!-- Updated path and size adjusted via CSS -->
+            <img src="SA.png" alt="App Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
             <h1 id="page-title" class="text-2xl font-bold truncate">SilverLife</h1>
         </div>
         <div class="flex gap-3">
@@ -130,13 +130,14 @@
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">Menu</h2>
         </div>
-        <a href="../html/shop.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Shop List</a> <!-- Updated path -->
-        <a href="../html/wellness.html" class="menu-item"><i class="fas fa-heart"></i> Exercise</a> <!-- Updated path -->
-        <a href="../html/contacts.html" class="menu-item"><i class="fas fa-phone"></i> Call</a> <!-- Updated path -->
-        <a href="../html/meds.html" class="menu-item"><i class="fas fa-pills"></i> Medicine</a> <!-- Updated path -->
-        <a href="../html/schedule.html" class="menu-item"><i class="fas fa-list-alt"></i> Schedule</a> <!-- Updated path -->
-        <a href="../html/tasks.html" class="menu-item"><i class="fas fa-check"></i> To-Do</a> <!-- Updated path -->
-        <a href="../html/notes.html" class="menu-item"><i class="fas fa-pen"></i> My Diary</a> <!-- Updated path -->
+        <a href="index.html" class="menu-item home-bg"><i class="fas fa-home"></i> Home</a>
+        <a href="shop.html" class="menu-item shop-bg"><i class="fas fa-shopping-cart"></i> Shop List</a>
+        <a href="wellness.html" class="menu-item wellness-bg"><i class="fas fa-heart"></i> Exercise</a>
+        <a href="contacts.html" class="menu-item contacts-bg"><i class="fas fa-phone"></i> Call</a>
+        <a href="meds.html" class="menu-item meds-bg"><i class="fas fa-pills"></i> Medicine</a>
+        <a href="schedule.html" class="menu-item schedule-bg"><i class="fas fa-list-alt"></i> Schedule</a>
+        <a href="tasks.html" class="menu-item tasks-bg"><i class="fas fa-check"></i> To-Do</a>
+        <a href="notes.html" class="menu-item notes-bg"><i class="fas fa-pen"></i> My Diary</a>
         <!-- Add more menu items here -->
     </div>
 
@@ -184,6 +185,6 @@
         <p class="mt-1"><a href="#" class="text-teal-200 hover:underline">Privacy Policy</a> | <a href="#" class="text-teal-200 hover:underline">Terms of Service</a></p>
     </footer>
 
-    <script src="../script/script.js"></script> <!-- Updated path -->
+    <script src="script.js"></script>
 </body>
 </html>
