@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Medication Reminders</title>
+    <title>Entertainment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-screen overflow-hidden flex flex-col meds-theme transition-all duration-500">
+<body class="h-screen overflow-hidden flex flex-col entertainment-theme transition-all duration-500">
+    <!-- Accessibility Bar -->
     <div id="access-bar">
         <div class="flex justify-between items-center mb-4 border-b pb-2">
             <h3 class="font-bold text-lg text-gray-800">Accessibility</h3>
@@ -55,80 +56,60 @@
             <i class="fas fa-undo mr-1"></i> Reset Settings
         </button>
     </div>
+
+    <!-- Header -->
     <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
         <div class="flex items-center gap-2">
             <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
-                <i class="fas fa-bars text-lg"></i> <!-- Hamburger Menu Icon -->
+                <i class="fas fa-bars text-lg"></i>
             </button>
-            <img src="SA.png" alt="Medicine Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
-            <h1 class="text-2xl font-bold truncate">Medicine Reminders</h1>
+            <img src="SA.png" alt="Entertainment Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
+            <h1 class="text-2xl font-bold truncate">Entertainment</h1>
         </div>
         <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
             <i class="fas fa-eye text-lg"></i>
         </button>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative">
-        <section id="meds" class="page-section active">
-            <div class="bg-blue-100 border-l-4 border-blue-500 p-4 mb-4 rounded-lg text-center">
-                <p class="text-blue-900 font-bold text-lg">Your Medication Reminders</p>
+        <section id="entertainment" class="page-section active">
+            <div class="bg-purple-100 border-l-4 border-purple-500 p-4 mb-4 rounded-lg">
+                <p class="text-purple-900 font-bold text-lg">Choose a game to play!</p>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Game Card 1: Tic-Tac-Toe -->
+                <a href="tictactoe.html" class="block bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-200 hover:border-purple-500 transition-all duration-300 tap-effect flex flex-col items-center justify-center text-center">
+                    <i class="fas fa-thumbtack text-6xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Tic-Tac-Toe</h3>
+                    <p class="text-gray-600 mt-2">Classic game for two players.</p>
+                </a>
 
-            <div id="med-list" class="space-y-4"></div>
-            <button onclick="openModal('med-modal')" class="fixed bottom-6 right-6 bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-2xl tap-effect hover:bg-blue-700">
-                <i class="fas fa-plus"></i>
-            </button>
+                <!-- Game Card 2: Sudoku (Placeholder) -->
+                <a href="sudoku.html" class="block bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-200 hover:border-purple-500 transition-all duration-300 tap-effect flex flex-col items-center justify-center text-center">
+                    <i class="fas fa-puzzle-piece text-6xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Sudoku</h3>
+                    <p class="text-gray-600 mt-2">Number puzzle game.</p>
+                </a>
+
+                <!-- Game Card 3: Tetris -->
+                <a href="tetris.html" class="block bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-200 hover:border-purple-500 transition-all duration-300 tap-effect flex flex-col items-center justify-center text-center">
+                    <i class="fas fa-cube text-6xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Tetris</h3>
+                    <p class="text-gray-600 mt-2">Classic falling block game.</p>
+                </a>
+                <!-- Game Card 4: Chess -->
+                <a href="chess.html" class="block bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-200 hover:border-purple-500 transition-all duration-300 tap-effect flex flex-col items-center justify-center text-center">
+                    <i class="fas fa-chess-knight text-6xl text-purple-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Chess</h3>
+                    <p class="text-gray-600 mt-2">Strategic board game.</p>
+                </a>
+                <!-- Add more game cards here -->
+
+            </div>
         </section>
     </main>
 
-    <div id="med-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-bold mb-4 text-blue-800">Add Medication</h3>
-            <input type="text" id="med-name" placeholder="Pill Name (e.g., Aspirin)" class="w-full p-4 mb-3 border-2 border-gray-300 rounded-xl text-lg text-gray-900">
-            <input type="time" id="med-time" class="w-full p-4 mb-3 border-2 border-gray-300 rounded-xl text-lg text-gray-900">
-            <input type="text" id="med-desc" placeholder="Instructions" class="w-full p-4 mb-6 border-2 border-gray-300 rounded-xl text-lg text-gray-900">
-            <div class="flex gap-3">
-                <button onclick="closeModal('med-modal')" class="flex-1 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold text-lg">Cancel</button>
-                <button onclick="saveItem('meds')" class="flex-1 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg">Save</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Medicine Alarm Ringing Screen (now triggered by individual alarms) -->
-    <div id="medicine-alarm-screen" class="call-screen">
-        <audio id="medicine-alarm-audio" src="alarm_clock.mp3" loop preload="auto"></audio>
-        <div class="flex flex-col items-center w-full">
-            <div class="call-avatar pulse-ring bg-red-500">
-                <i class="fas fa-bell text-white"></i>
-            </div>
-            <h2 id="medicine-alarm-name-display" class="text-3xl font-bold mb-2">Medicine Time</h2>
-            <p class="text-gray-400 text-lg">Time to take your medicine!</p>
-        </div>
-        
-        <div class="w-full flex flex-wrap justify-center gap-4 py-4">
-            <button onclick="snoozeMedicineAlarm()" class="flex flex-col items-center text-gray-400">
-                <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-2">
-                    <i class="fas fa-clock text-2xl text-white"></i>
-                </div>
-                <span class="text-white text-sm">Snooze</span>
-            </button>
-            <button onclick="stopMedicineAlarmSound()" class="flex flex-col items-center text-gray-400">
-                <div class="w-16 h-16 rounded-full bg-red-700 flex items-center justify-center mb-2">
-                    <i class="fas fa-times text-2xl text-white"></i>
-                </div>
-                <span class="text-white text-sm">Stop</span>
-            </button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            applyAccessSettings();
-            // Initial render of meds
-            renderMeds();
-        });
-    </script>
     <!-- Sidebar Menu -->
     <div id="sidebar-menu">
         <div class="p-4 border-b border-gray-200">
@@ -148,5 +129,12 @@
 
     <!-- Menu Overlay -->
     <div id="menu-overlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAccessSettings();
+        });
+    </script>
 </body>
 </html>

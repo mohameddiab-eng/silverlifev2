@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sudoku</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 38px); /* Slightly larger cells */
+            grid-template-rows: repeat(9, 38px);
+            gap: 0; /* Remove gap for clean borders */
+            margin-top: 20px;
+            background-color: #000; /* Dark background behind the grid */
+            border: 4px solid #4b5563; /* Thicker, prominent border for the whole grid */
+            border-radius: 8px; /* Slightly rounded corners for the grid */
+            overflow: hidden; /* Ensures rounded corners apply to inner cells too */
+        }
+        .sudoku-cell {
+            width: 38px;
+            height: 38px;
+            background-color: #ffffff; /* White background for editable cells */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em; /* Larger font size */
+            font-weight: 600; /* Bolder numbers */
+            color: #1f2937; /* Dark text */
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #d1d5db; /* Lighter border for cell separation */
+            box-sizing: border-box;
+            transition: background-color 0.1s ease-in-out;
+        }
+        .sudoku-cell.prefilled { 
+            background-color: #e5e7eb; /* Light gray for prefilled cells */
+            color: #374151; /* Darker text for prefilled */
+            cursor: default;
+            font-weight: 700; /* Even bolder for prefilled */
+        }
+        .sudoku-cell.selected { 
+            background-color: #a5d7ff; /* Light blue for selected cell */
+            border: 2px solid #3b82f6; /* Stronger border for selected */
+        }
+        .sudoku-cell.error { 
+            background-color: #fca5a5; /* Light red for error */
+            color: #991b1b; /* Dark red text for error */
+        }
+
+        /* Thicker borders for 3x3 blocks (major grid lines) */
+        .sudoku-grid .sudoku-cell:nth-child(3n):not(:nth-child(9n)) { border-right: 2px solid #4b5563; }
+        .sudoku-grid .sudoku-cell:nth-child(9n) { border-right: none; } /* Remove right border of the entire grid */
+
+        /* Horizontal thicker lines for 3x3 blocks */
+        .sudoku-grid .sudoku-cell:nth-child(n) {
+            border-top: 1px solid #d1d5db; /* Default top border */
+            border-left: 1px solid #d1d5db; /* Default left border */
+        }
+        /* Apply thicker top border to cells in rows 4 and 7 */
+        .sudoku-grid .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+        .sudoku-grid .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
+            border-top: 2px solid #4b5563;
+        }
+
+        /* Remove top border for the very first row */
+        .sudoku-grid .sudoku-cell:nth-child(n):nth-child(-n+9) { border-top: none; }
+        /* Remove left border for the very first column */
+        .sudoku-grid .sudoku-cell:nth-child(9n + 1) { border-left: none; }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(5, 50px); /* Adjust for 5 columns */
+            gap: 8px; /* Smaller gap */
+            margin-top: 30px; /* More space */
+            padding: 15px; /* Padding around the numpad */
+            background-color: #ffffff; /* White background for numpad */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        .number-pad button {
+            width: 50px; /* Standardized button size */
+            height: 50px;
+            background-color: #f3f4f6; /* Light gray buttons */
+            border-radius: 50%; /* Circular buttons */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em; /* Slightly smaller font for circular buttons */
+            font-weight: 700; /* Bolder text */
+            color: #1f2937;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            border: none; /* No default border */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+        }
+        .number-pad button:hover { 
+            background-color: #e5e7eb; /* Slightly darker on hover */
+            transform: translateY(-1px); /* Slight lift */
+        }
+        .number-pad button:active { 
+            transform: scale(0.95); /* Click feedback */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); 
+        }
+        .number-pad button.clear { 
+            background-color: #ef4444; /* Red for clear */
+            color: white;
+            grid-column: span 2; /* Make clear button wider */
+            width: auto; /* Allow auto width for spanning columns */
+            border-radius: 8px; /* Rounded rectangle for clear button */
+        }
+        /* Adjust for smaller screens */
+        @media (max-width: 640px) {
+            .sudoku-grid {
+                grid-template-columns: repeat(9, 30px);
+                grid-template-rows: repeat(9, 30px);
+                border-width: 2px;
+            }
+            .sudoku-cell {
+                width: 30px;
+                height: 30px;
+                font-size: 1.1em;
+            }
+            .sudoku-grid .sudoku-cell:nth-child(3n):not(:nth-child(9n)) { border-right: 1px solid #4b5563; }
+            .sudoku-grid .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+            .sudoku-grid .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
+                border-top: 1px solid #4b5563;
+            }
+            .number-pad {
+                grid-template-columns: repeat(5, 45px);
+                gap: 5px;
+                padding: 10px;
+            }
+            .number-pad button {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col entertainment-theme transition-all duration-500">
+    <!-- Accessibility Bar -->
+    <div id="access-bar">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h3 class="font-bold text-lg text-gray-800">Accessibility</h3>
+            <button onclick="toggleAccessBar()" class="text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Text Size</p>
+            <div class="flex gap-2">
+                <button onclick="setAccess('size', 'normal')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-sm hover:bg-gray-300">A</button>
+                <button onclick="setAccess('size', 'large')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-lg font-bold hover:bg-gray-300">A+</button>
+                <button onclick="setAccess('size', 'xl')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-xl font-bold hover:bg-gray-300">A++</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Display Mode</p>
+            <div class="space-y-2">
+                <button onclick="setAccess('mode', 'light')" class="w-full bg-white text-gray-800 p-3 rounded font-bold border border-gray-300 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-sun text-yellow-500"></i> Light Mode
+                </button>
+                 <button onclick="setAccess('mode', 'dark')" class="w-full bg-gray-800 text-white p-3 rounded font-bold border border-gray-600 flex items-center justify-center gap-2">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button onclick="setAccess('mode', 'contrast')" class="w-full bg-black text-yellow-400 p-3 rounded font-bold border-2 border-yellow-400 flex items-center justify-center gap-2">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Voice Assistant</p>
+            <div class="flex gap-2">
+                <button onclick="readPage()" class="flex-1 bg-blue-100 text-blue-800 p-3 rounded font-bold flex items-center justify-center gap-2 hover:bg-blue-200">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+                <button onclick="stopReading()" class="w-16 bg-red-100 text-red-800 p-3 rounded font-bold flex items-center justify-center hover:bg-red-200">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
+
+        <button onclick="setAccess('reset')" class="w-full bg-gray-200 text-gray-700 p-3 rounded font-bold mt-4 hover:bg-gray-300 border border-gray-300">
+            <i class="fas fa-undo mr-1"></i> Reset Settings
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
+        <div class="flex items-center gap-2">
+            <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            <img src="SA.png" alt="Sudoku Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
+            <h1 class="text-2xl font-bold truncate">Sudoku</h1>
+        </div>
+        <div class="flex items-center gap-2">
+            <select id="game-switcher" class="bg-teal-700 text-white p-2 rounded-full text-sm mr-2 tap-effect focus:ring-2 focus:ring-teal-400">
+                <option value="entertainment.html">Games Hub</option>
+                <option value="tetris.html">Tetris</option>
+                <option value="tictactoe.html">Tic-Tac-Toe</option>
+                <option value="sudoku.html" selected>Sudoku</option>
+            </select>
+            <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
+                <i class="fas fa-eye text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative flex flex-col items-center">
+        <section id="sudoku" class="page-section active flex flex-col items-center">
+            <div class="bg-purple-100 border-l-4 border-purple-500 p-4 mb-4 rounded-lg text-center">
+                <p id="game-status" class="text-purple-900 font-bold text-lg">Solve the puzzle!</p>
+            </div>
+            <div class="sudoku-grid" id="sudoku-grid">
+                <!-- Cells will be dynamically generated here -->
+            </div>
+            <div class="number-pad" id="number-pad">
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+                <button data-value="7">7</button>
+                <button data-value="8">8</button>
+                <button data-value="9">9</button>
+                <button data-value="clear" class="clear">Clear</button>
+            </div>
+            <div class="flex gap-4 mt-6">
+                <button id="new-game-btn" class="bg-blue-500 text-white py-3 px-6 rounded-xl font-bold text-lg tap-effect hover:bg-blue-600">New Game</button>
+                <button id="solve-puzzle-btn" class="bg-green-500 text-white py-3 px-6 rounded-xl font-bold text-lg tap-effect hover:bg-green-600">Show Answer</button>
+            </div>
+            <button id="reset-sudoku-btn" class="mt-4 bg-red-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg tap-effect hover:bg-red-600">Reset Current</button>
+        </section>
+    </main>
+
+    <!-- Congratulations Modal -->
+    <div id="congratulations-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm mx-4 transform transition-all duration-300 scale-90 opacity-0" id="congratulations-content">
+            <i class="fas fa-trophy text-yellow-500 text-6xl mb-4 animate-bounce"></i>
+            <h3 class="text-3xl font-bold text-gray-800 mb-2">Congratulations!</h3>
+            <p class="text-gray-600 text-lg mb-6">You've solved the Sudoku puzzle!</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="closeCongratulationsModal(); newGame();" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg tap-effect hover:bg-purple-700">Play Again</button>
+                <button onclick="closeCongratulationsModal();" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl shadow-lg tap-effect hover:bg-gray-400">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+        </div>
+        <a href="index.html" class="menu-item home-bg"><i class="fas fa-home"></i> Home</a>
+        <a href="shop.html" class="menu-item shop-bg"><i class="fas fa-shopping-cart"></i> Shop List</a>
+        <a href="wellness.html" class="menu-item wellness-bg"><i class="fas fa-heart"></i> Exercise</a>
+        <a href="contacts.html" class="menu-item contacts-bg"><i class="fas fa-phone"></i> Call</a>
+        <a href="meds.html" class="menu-item meds-bg"><i class="fas fa-pills"></i> Medicine</a>
+        <a href="schedule.html" class="menu-item schedule-bg"><i class="fas fa-list-alt"></i> Schedule</a>
+        <a href="tasks.html" class="menu-item tasks-bg"><i class="fas fa-check"></i> To-Do</a>
+        <a href="notes.html" class="menu-item notes-bg"><i class="fas fa-pen"></i> My Diary</a>
+        <a href="entertainment.html" class="menu-item entertainment-bg"><i class="fas fa-gamepad"></i> Entertainment</a>
+        <a href="snake.html" class="menu-item snake-bg"><i class="fas fa-snake"></i> Snake</a>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAccessSettings();
+
+            const sudokuGrid = document.getElementById('sudoku-grid');
+            const numberPad = document.getElementById('number-pad');
+            const resetSudokuBtn = document.getElementById('reset-sudoku-btn');
+            const newGameBtn = document.getElementById('new-game-btn');
+            const solvePuzzleBtn = document.getElementById('solve-puzzle-btn');
+            const gameStatus = document.getElementById('game-status');
+
+            const congratulationsModal = document.getElementById('congratulations-modal');
+            const congratulationsContent = document.getElementById('congratulations-content');
+
+            let selectedCell = null;
+            let currentPuzzle = []; // To store the current puzzle state (with user input)
+            let initialPuzzle = []; // To store the initial generated puzzle (fixed numbers)
+            let solvedPuzzle = []; // To store the solution for the current puzzle
+
+            // --- Sudoku Generation and Solving Logic ---
+
+            // Helper function to check if a number is valid in a cell
+            function isValid(board, row, col, num) {
+                // Check row
+                for (let x = 0; x < 9; x++) {
+                    if (board[row][x] === num) return false;
+                }
+                // Check column
+                for (let x = 0; x < 9; x++) {
+                    if (board[x][col] === num) return false;
+                }
+                // Check 3x3 box
+                const startRow = row - row % 3;
+                const startCol = col - col % 3;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (board[i + startRow][j + startCol] === num) return false;
+                    }
+                }
+                return true;
+            }
+
+            // Sudoku Solver (Backtracking Algorithm)
+            function solveSudoku(board) {
+                for (let r = 0; r < 9; r++) {
+                    for (let c = 0; c < 9; c++) {
+                        if (board[r][c] === 0) {
+                            for (let num = 1; num <= 9; num++) {
+                                if (isValid(board, r, c, num)) {
+                                    board[r][c] = num;
+                                    if (solveSudoku(board)) {
+                                        return true;
+                                    }
+                                    board[r][c] = 0; // Backtrack
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            // Generate a full solved Sudoku board
+            function generateSolvedBoard() {
+                let board = Array(9).fill(0).map(() => Array(9).fill(0));
+                function fillDiagonal(start) {
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            let num;
+                            do {
+                                num = Math.floor(Math.random() * 9) + 1;
+                            } while (!isValid(board, start + i, start + j, num));
+                            board[start + i][start + j] = num;
+                        }
+                    }
+                }
+                fillDiagonal(0);
+                fillDiagonal(3);
+                fillDiagonal(6);
+                solveSudoku(board); // Solve the rest of the board
+                return board;
+            }
+
+            // Create a Sudoku puzzle from a solved board
+            function generatePuzzle(solvedBoard, difficulty = 'medium') {
+                let puzzle = solvedBoard.map(row => [...row]);
+                let cellsToRemove;
+                if (difficulty === 'easy') cellsToRemove = 35;
+                else if (difficulty === 'medium') cellsToRemove = 45;
+                else if (difficulty === 'hard') cellsToRemove = 55;
+                else cellsToRemove = 45; // Default to medium
+
+                let count = 0;
+                while (count < cellsToRemove) {
+                    let row = Math.floor(Math.random() * 9);
+                    let col = Math.floor(Math.random() * 9);
+
+                    if (puzzle[row][col] !== 0) {
+                        let temp = puzzle[row][col];
+                        puzzle[row][col] = 0;
+                        // To ensure unique solution, we'd need a more complex check
+                        // For now, we'll keep it simple for demonstration
+                        count++;
+                    }
+                }
+                return puzzle;
+            }
+
+            function showCongratulationsModal() {
+                congratulationsModal.classList.remove('hidden');
+                setTimeout(() => {
+                    congratulationsContent.classList.remove('opacity-0', 'scale-90');
+                }, 10);
+            }
+
+            window.closeCongratulationsModal = () => {
+                congratulationsContent.classList.add('opacity-0', 'scale-90');
+                setTimeout(() => {
+                    congratulationsModal.classList.add('hidden');
+                }, 300); // Match transition duration
+            };
+
+            function newGame(difficulty = 'medium') {
+                const solved = generateSolvedBoard();
+                solvedPuzzle = solved.map(row => [...row]); // Store the solution
+
+                const initial = generatePuzzle(solved, difficulty);
+                initialPuzzle = initial.map(row => [...row]); // Store initial puzzle
+                currentPuzzle = initial.map(row => [...row]); // Current state for user input
+
+                renderGrid();
+                gameStatus.textContent = "Solve the puzzle!";
+                closeCongratulationsModal(); // Ensure modal is hidden on new game
+            }
+
+            function showSolution() {
+                currentPuzzle = solvedPuzzle.map(row => [...row]);
+                renderGrid();
+                gameStatus.textContent = "Here's the solution!";
+            }
+
+            // --- UI Rendering and Event Handlers ---
+
+            function renderGrid() {
+                sudokuGrid.innerHTML = '';
+                for (let r = 0; r < 9; r++) {
+                    for (let c = 0; c < 9; c++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('sudoku-cell');
+                        cell.dataset.row = r;
+                        cell.dataset.col = c;
+
+                        if (initialPuzzle[r][c] !== 0) {
+                            cell.textContent = initialPuzzle[r][c];
+                            cell.classList.add('prefilled');
+                        } else if (currentPuzzle[r][c] !== 0) {
+                            cell.textContent = currentPuzzle[r][c];
+                        }
+
+                        cell.addEventListener('click', handleCellClick);
+                        sudokuGrid.appendChild(cell);
+                    }
+                }
+            }
+
+            function handleCellClick(event) {
+                if (selectedCell) {
+                    selectedCell.classList.remove('selected');
+                }
+                selectedCell = event.target;
+                if (!selectedCell.classList.contains('prefilled')) {
+                    selectedCell.classList.add('selected');
+                }
+            }
+
+            function handleNumberPadClick(event) {
+                if (!selectedCell || selectedCell.classList.contains('prefilled')) return;
+
+                const value = event.target.dataset.value;
+                const row = parseInt(selectedCell.dataset.row);
+                const col = parseInt(selectedCell.dataset.col);
+
+                if (value === 'clear') {
+                    selectedCell.textContent = '';
+                    currentPuzzle[row][col] = 0;
+                    selectedCell.classList.remove('error'); // Clear error on clear
+                } else {
+                    selectedCell.textContent = value;
+                    currentPuzzle[row][col] = parseInt(value);
+                }
+                validateCurrentPuzzle();
+            }
+
+            function validateCurrentPuzzle() {
+                // Clear previous errors
+                document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                    cell.classList.remove('error');
+                });
+
+                let allCorrect = true;
+                let allFilled = true;
+
+                for (let r = 0; r < 9; r++) {
+                    for (let c = 0; c < 9; c++) {
+                        const cellElement = sudokuGrid.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+                        const val = currentPuzzle[r][c];
+                        
+                        if (val === 0) {
+                            allFilled = false;
+                        } else if (val !== solvedPuzzle[r][c] && !cellElement.classList.contains('prefilled')) {
+                            cellElement.classList.add('error');
+                            allCorrect = false;
+                        }
+                    }
+                }
+
+                if (allFilled && allCorrect) {
+                    gameStatus.textContent = "Congratulations! You solved it!";
+                    showCongratulationsModal();
+                } else if (allFilled && !allCorrect) {
+                    gameStatus.textContent = "Keep trying! Some numbers are incorrect.";
+                } else if (!allFilled && allCorrect) {
+                    gameStatus.textContent = "Looks good so far! Keep going.";
+                } else {
+                    gameStatus.textContent = "Solve the puzzle!";
+                }
+            }
+
+            // Event Listeners
+            resetSudokuBtn.addEventListener('click', () => {
+                currentPuzzle = initialPuzzle.map(row => [...row]); // Reset to initial puzzle state
+                renderGrid();
+                gameStatus.textContent = "Solve the puzzle!";
+            });
+            newGameBtn.addEventListener('click', () => { newGame(); });
+            solvePuzzleBtn.addEventListener('click', showSolution);
+            numberPad.addEventListener('click', handleNumberPadClick);
+
+            // Game switcher logic
+            const gameSwitcher = document.getElementById('game-switcher');
+            gameSwitcher.addEventListener('change', (event) => {
+                window.location.href = event.target.value;
+            });
+
+            newGame(); // Initial game load
+        });
+    </script>
+</body>
+</html>

@@ -46,6 +46,7 @@ body.shop-theme { background-color: #ecfccb; background-image: none; } /* Lime-5
 body.wellness-theme { background-color: #fce7f3; background-image: none; } /* Pink-50 */
 body.schedule-theme { background-color: #e0e7ff; background-image: none; } /* Indigo-50 */
 body.notes-theme { background-color: #fef9c3; background-image: none; } /* Yellow-50 */
+body.entertainment-theme { background-color: #ede9fe; background-image: none; } /* Purple-50 */
 
 /* Light Mode (Forces clean white/gray look) */
 body.light-mode {
@@ -193,6 +194,7 @@ body.high-contrast {
 #sidebar-menu .schedule-bg::before { background-image: url('schedule-menu-bg.png'); }
 #sidebar-menu .tasks-bg::before { background-image: url('tasks-menu-bg.png'); }
 #sidebar-menu .notes-bg::before { background-image: url('notes-menu-bg.png'); }
+#sidebar-menu .entertainment-bg::before { background-image: url('entertainment-menu-bg.png'); }
 
 /* Overlay for when menu is open */
 #menu-overlay {
@@ -330,12 +332,16 @@ body.high-contrast {
 
 .video-wrapper {
     position: relative;
-    padding-bottom: 56.25%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     height: 0;
     background: #000;
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 1rem;
+    width: 100%; /* Ensure it takes full width on small screens */
+    max-width: 560px; /* Max width of the original iframe */
+    margin-left: auto; /* Center the video wrapper */
+    margin-right: auto;
 }
 .video-wrapper iframe {
     position: absolute;

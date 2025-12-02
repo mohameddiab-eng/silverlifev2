@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chess</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .chessboard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #2c2c2c; /* Dark background for the chess area */
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 45px);
+            grid-template-rows: repeat(8, 45px);
+            border: 4px solid #7a7a7a;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+        .square {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em; /* For pieces or coordinates if added */
+            cursor: pointer;
+            user-select: none;
+        }
+        .light { background-color: #eeeed2; color: #769656; } /* Light squares, green pieces */
+        .dark { background-color: #769656; color: #eeeed2; } /* Dark squares, light pieces */
+
+        .selected { background-color: #a5d7ff; } /* Light blue for selected square */
+        .highlight { background-color: #ffcc00; opacity: 0.8; } /* Yellow for moves */
+
+        .piece {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Chess pieces using Font Awesome for now, can be replaced with images later */
+        .piece.k-w::before { content: "\2654"; } .piece.q-w::before { content: "\2655"; } .piece.r-w::before { content: "\2656"; } .piece.b-w::before { content: "\2657"; } .piece.n-w::before { content: "\2658"; } .piece.p-w::before { content: "\2659"; }
+        .piece.k-b::before { content: "\265A"; } .piece.q-b::before { content: "\265B"; } .piece.r-b::before { content: "\265C"; } .piece.b-b::before { content: "\265D"; } .piece.n-b::before { content: "\265E"; } .piece.p-b::before { content: "\265F"; }
+        
+        .piece-white { color: #eeeed2; }
+        .piece-black { color: #2c2c2c; }
+
+        /* Ensure pieces are centered and take up full space for visibility */
+        .piece {
+            font-family: "Segoe UI Symbol", "Noto Color Emoji", "Apple Color Emoji", sans-serif; /* Fallback for chess symbols */
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .chess-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .chess-controls button {
+            background-color: #4CAF50; /* Green for controls */
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .chess-controls button:hover { background-color: #45a049; transform: translateY(-1px); }
+        .chess-controls button:active { transform: scale(0.98); }
+
+        @media (max-width: 640px) {
+            .chessboard {
+                grid-template-columns: repeat(8, 35px);
+                grid-template-rows: repeat(8, 35px);
+            }
+            .square {
+                width: 35px;
+                height: 35px;
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col entertainment-theme transition-all duration-500">
+    <!-- Accessibility Bar -->
+    <div id="access-bar">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h3 class="font-bold text-lg text-gray-800">Accessibility</h3>
+            <button onclick="toggleAccessBar()" class="text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Text Size</p>
+            <div class="flex gap-2">
+                <button onclick="setAccess('size', 'normal')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-sm hover:bg-gray-300">A</button>
+                <button onclick="setAccess('size', 'large')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-lg font-bold hover:bg-gray-300">A+</button>
+                <button onclick="setAccess('size', 'xl')" class="flex-1 bg-gray-200 text-gray-800 p-2 rounded text-xl font-bold hover:bg-gray-300">A++</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Display Mode</p>
+            <div class="space-y-2">
+                <button onclick="setAccess('mode', 'light')" class="w-full bg-white text-gray-800 p-3 rounded font-bold border border-gray-300 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-sun text-yellow-500"></i> Light Mode
+                </button>
+                 <button onclick="setAccess('mode', 'dark')" class="w-full bg-gray-800 text-white p-3 rounded font-bold border border-gray-600 flex items-center justify-center gap-2">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button onclick="setAccess('mode', 'contrast')" class="w-full bg-black text-yellow-400 p-3 rounded font-bold border-2 border-yellow-400 flex items-center justify-center gap-2">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <p class="text-sm text-gray-600 mb-2 font-bold">Voice Assistant</p>
+            <div class="flex gap-2">
+                <button onclick="readPage()" class="flex-1 bg-blue-100 text-blue-800 p-3 rounded font-bold flex items-center justify-center gap-2 hover:bg-blue-200">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+                <button onclick="stopReading()" class="w-16 bg-red-100 text-red-800 p-3 rounded font-bold flex items-center justify-center hover:bg-red-200">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        </div>
+
+        <button onclick="setAccess('reset')" class="w-full bg-gray-200 text-gray-700 p-3 rounded font-bold mt-4 hover:bg-gray-300 border border-gray-300">
+            <i class="fas fa-undo mr-1"></i> Reset Settings
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-teal-600 text-white p-4 shadow-md z-30 sticky top-0 flex justify-between items-center h-16">
+        <div class="flex items-center gap-2">
+            <button id="menu-button" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Menu">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            <img src="SA.png" alt="Chess Logo" class="w-8 h-8 rounded-full mr-2 app-logo">
+            <h1 class="text-2xl font-bold truncate">Chess</h1>
+        </div>
+        <div class="flex items-center gap-2">
+            <select id="game-switcher" class="bg-teal-700 text-white p-2 rounded-full text-sm mr-2 tap-effect focus:ring-2 focus:ring-teal-400">
+                <option value="entertainment.html">Games Hub</option>
+                <option value="tetris.html">Tetris</option>
+                <option value="tictactoe.html">Tic-Tac-Toe</option>
+                <option value="sudoku.html">Sudoku</option>
+                <option value="chess.html" selected>Chess</option>
+            </select>
+            <button onclick="toggleAccessBar()" class="bg-teal-700 w-10 h-10 rounded-full flex items-center justify-center tap-effect border border-teal-500 shadow-sm" aria-label="Accessibility Settings">
+                <i class="fas fa-eye text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative flex flex-col items-center">
+        <section id="chess-game" class="page-section active flex flex-col items-center">
+            <div class="bg-purple-100 border-l-4 border-purple-500 p-4 mb-4 rounded-lg text-center">
+                <p id="game-status" class="text-purple-900 font-bold text-lg">White to move</p>
+            </div>
+            
+            <div class="chessboard-container">
+                <div class="chessboard" id="chessboard">
+                    <!-- Chessboard squares will be dynamically generated here -->
+                </div>
+                <div class="chess-controls">
+                    <button id="hint-btn" class="bg-blue-500 hover:bg-blue-600">Show Hint</button>
+                    <button id="reset-chess-btn" class="bg-red-500 hover:bg-red-600">Reset Game</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+        </div>
+        <a href="index.html" class="menu-item home-bg"><i class="fas fa-home"></i> Home</a>
+        <a href="shop.html" class="menu-item shop-bg"><i class="fas fa-shopping-cart"></i> Shop List</a>
+        <a href="wellness.html" class="menu-item wellness-bg"><i class="fas fa-heart"></i> Exercise</a>
+        <a href="contacts.html" class="menu-item contacts-bg"><i class="fas fa-phone"></i> Call</a>
+        <a href="meds.html" class="menu-item meds-bg"><i class="fas fa-pills"></i> Medicine</a>
+        <a href="schedule.html" class="menu-item schedule-bg"><i class="fas fa-list-alt"></i> Schedule</a>
+        <a href="tasks.html" class="menu-item tasks-bg"><i class="fas fa-check"></i> To-Do</a>
+        <a href="notes.html" class="menu-item notes-bg"><i class="fas fa-pen"></i> My Diary</a>
+        <a href="entertainment.html" class="menu-item entertainment-bg"><i class="fas fa-gamepad"></i> Entertainment</a>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay"></div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAccessSettings();
+
+            const chessboard = document.getElementById('chessboard');
+            const gameStatus = document.getElementById('game-status');
+            const hintBtn = document.getElementById('hint-btn');
+            const resetChessBtn = document.getElementById('reset-chess-btn');
+
+            let board = []; // 8x8 array to represent the chessboard
+            let selectedSquare = null;
+            let currentTurn = 'white'; // 'white' or 'black'
+
+            const initialBoard = [
+                ['r-b', 'n-b', 'b-b', 'q-b', 'k-b', 'b-b', 'n-b', 'r-b'],
+                ['p-b', 'p-b', 'p-b', 'p-b', 'p-b', 'p-b', 'p-b', 'p-b'],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['p-w', 'p-w', 'p-w', 'p-w', 'p-w', 'p-w', 'p-w', 'p-w'],
+                ['r-w', 'n-w', 'b-w', 'q-w', 'k-w', 'b-w', 'n-w', 'r-w']
+            ];
+
+            function initializeBoard() {
+                board = initialBoard.map(row => [...row]);
+                renderBoard();
+                gameStatus.textContent = "White to move";
+                currentTurn = 'white';
+                selectedSquare = null;
+            }
+
+            function renderBoard() {
+                chessboard.innerHTML = '';
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        const square = document.createElement('div');
+                        square.classList.add('square');
+                        square.classList.add((r + c) % 2 === 0 ? 'light' : 'dark');
+                        square.dataset.row = r;
+                        square.dataset.col = c;
+
+                        const piece = board[r][c];
+                        if (piece) {
+                            const pieceElement = document.createElement('div');
+                            pieceElement.classList.add('piece', piece);
+                            pieceElement.classList.add(piece.endsWith('-w') ? 'piece-white' : 'piece-black');
+                            square.appendChild(pieceElement);
+                        }
+
+                        square.addEventListener('click', handleSquareClick);
+                        chessboard.appendChild(square);
+                    }
+                }
+            }
+
+            function handleSquareClick(event) {
+                const clickedSquare = event.currentTarget;
+                const row = parseInt(clickedSquare.dataset.row);
+                const col = parseInt(clickedSquare.dataset.col);
+                const piece = board[row][col];
+
+                // Clear existing highlights
+                document.querySelectorAll('.highlight').forEach(sq => sq.classList.remove('highlight'));
+                
+                if (selectedSquare) {
+                    // A piece is already selected, try to move
+                    const prevRow = parseInt(selectedSquare.dataset.row);
+                    const prevCol = parseInt(selectedSquare.dataset.col);
+                    
+                    if (isValidMove(prevRow, prevCol, row, col)) {
+                        movePiece(prevRow, prevCol, row, col);
+                        switchTurn();
+                    }
+                    selectedSquare.classList.remove('selected');
+                    selectedSquare = null;
+                } else if (piece && piece.endsWith('-' + currentTurn.charAt(0))) {
+                    // Select a piece of the current player's turn
+                    selectedSquare = clickedSquare;
+                    selectedSquare.classList.add('selected');
+                    highlightPossibleMoves(row, col);
+                }
+            }
+
+            function isValidMove(startRow, startCol, endRow, endCol) {
+                const startPiece = board[startRow][startCol];
+                const endPiece = board[endRow][endCol];
+                const startColor = startPiece.endsWith('-w') ? 'white' : 'black';
+                const endColor = endPiece ? (endPiece.endsWith('-w') ? 'white' : 'black') : null;
+
+                if (!startPiece || startColor !== currentTurn) return false; // No piece or not current player's piece
+                if (endPiece && endColor === startColor) return false; // Cannot capture your own piece
+
+                const pieceType = startPiece.substring(0, 1);
+
+                switch (pieceType) {
+                    case 'p': return isValidPawnMove(startRow, startCol, endRow, endCol, startColor);
+                    case 'r': return isValidRookMove(startRow, startCol, endRow, endCol);
+                    case 'n': return isValidKnightMove(startRow, startCol, endRow, endCol);
+                    case 'b': return isValidBishopMove(startRow, startCol, endRow, endCol);
+                    case 'q': return isValidQueenMove(startRow, startCol, endRow, endCol);
+                    case 'k': return isValidKingMove(startRow, startCol, endRow, endCol);
+                }
+
+                return false; // Default to invalid
+            }
+
+            function isPathClear(startRow, startCol, endRow, endCol, type) {
+                let r = startRow;
+                let c = startCol;
+
+                const rowIncrement = endRow > startRow ? 1 : (endRow < startRow ? -1 : 0);
+                const colIncrement = endCol > startCol ? 1 : (endCol < startCol ? -1 : 0);
+
+                r += rowIncrement;
+                c += colIncrement;
+
+                while (r !== endRow || c !== endCol) {
+                    if (board[r][c] !== '') return false; // Obstruction found
+                    r += rowIncrement;
+                    c += colIncrement;
+                }
+                return true;
+            }
+
+            function isValidPawnMove(startRow, startCol, endRow, endCol, color) {
+                const direction = (color === 'white') ? -1 : 1; // White moves up (-1 row), Black moves down (+1 row)
+                const startRank = (color === 'white') ? 6 : 1; // White pawns start on rank 6, Black on rank 1
+
+                // 1 Square forward move
+                if (startCol === endCol && endRow === startRow + direction && board[endRow][endCol] === '') {
+                    return true;
+                }
+
+                // 2 Squares forward move (only from starting position)
+                if (startCol === endCol && startRow === startRank && endRow === startRow + 2 * direction && board[endRow][endCol] === '' && board[startRow + direction][endCol] === '') {
+                    return true;
+                }
+
+                // Capturing move (diagonal)
+                if (Math.abs(startCol - endCol) === 1 && endRow === startRow + direction && board[endRow][endCol] !== '' && !board[endRow][endCol].endsWith(color.charAt(0))) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            function isValidRookMove(startRow, startCol, endRow, endCol) {
+                if (startRow === endRow) { // Horizontal move
+                    if (!isPathClear(startRow, startCol, endRow, endCol, 'horizontal')) return false;
+                    return true;
+                } else if (startCol === endCol) { // Vertical move
+                    if (!isPathClear(startRow, startCol, endRow, endCol, 'vertical')) return false;
+                    return true;
+                }
+                return false;
+            }
+
+            function isValidKnightMove(startRow, startCol, endRow, endCol) {
+                const dr = Math.abs(startRow - endRow);
+                const dc = Math.abs(startCol - endCol);
+                // L-shape movement: (2,1) or (1,2)
+                return (dr === 2 && dc === 1) || (dr === 1 && dc === 2);
+            }
+
+            function isValidBishopMove(startRow, startCol, endRow, endCol) {
+                if (Math.abs(startRow - endRow) !== Math.abs(startCol - endCol)) return false; // Not a diagonal move
+
+                if (!isPathClear(startRow, startCol, endRow, endCol, 'diagonal')) return false;
+                return true;
+            }
+
+            function isValidQueenMove(startRow, startCol, endRow, endCol) {
+                // Queen combines Rook and Bishop moves
+                return isValidRookMove(startRow, startCol, endRow, endCol) || isValidBishopMove(startRow, startCol, endRow, endCol);
+            }
+
+            function isValidKingMove(startRow, startCol, endRow, endCol) {
+                const dr = Math.abs(startRow - endRow);
+                const dc = Math.abs(startCol - endCol);
+                // King moves one square in any direction
+                return dr <= 1 && dc <= 1 && (dr !== 0 || dc !== 0);
+            }
+
+            function movePiece(startRow, startCol, endRow, endCol) {
+                board[endRow][endCol] = board[startRow][startCol];
+                board[startRow][startCol] = '';
+                renderBoard();
+            }
+
+            function highlightPossibleMoves(row, col) {
+                // Placeholder for highlighting valid moves for the selected piece
+                // This would require actual chess logic to determine valid moves
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        if (isValidMove(row, col, r, c)) {
+                            const targetSquare = chessboard.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+                            if (targetSquare) {
+                                targetSquare.classList.add('highlight');
+                            }
+                        }
+                    }
+                }
+            }
+
+            function switchTurn() {
+                currentTurn = currentTurn === 'white' ? 'black' : 'white';
+                gameStatus.textContent = `${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} to move`;
+            }
+
+            function showHint() {
+                // Placeholder for hint logic
+                gameStatus.textContent = "Hint: Think strategically!";
+                // In a real chess game, this would highlight a suggested move.
+            }
+
+            function resetGame() {
+                initializeBoard();
+                gameStatus.textContent = "White to move";
+            }
+
+            // Event Listeners for buttons
+            hintBtn.addEventListener('click', showHint);
+            resetChessBtn.addEventListener('click', resetGame);
+
+            // Game switcher logic
+            const gameSwitcher = document.getElementById('game-switcher');
+            gameSwitcher.addEventListener('change', (event) => {
+                window.location.href = event.target.value;
+            });
+
+            initializeBoard(); // Initialize the board when the page loads
+        });
+    </script>
+</body>
+</html>
