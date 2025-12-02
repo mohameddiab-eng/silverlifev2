@@ -564,6 +564,7 @@ async function fetchNewsFeed() {
 
     try {
         const proxyUrl = 'https://api.allorigins.win/get?url=';
+        console.log("Attempting to fetch news feed...");
         const response = await fetch(proxyUrl + encodeURIComponent(RSS_URL));
         const data = await response.json();
         const parser = new DOMParser();
@@ -588,11 +589,13 @@ async function fetchNewsFeed() {
             }
         });
         container.innerHTML = html;
+        console.log("News feed fetched successfully.");
 
     } catch (error) {
-        console.error("Error fetching or parsing RSS feed:", error);
-        container.innerHTML = '<p class="text-red-500 text-center">Failed to load news. Please try again later. (Error: ' + error.message + ')</p>' +
+        console.error("Error fetching or parsing RSS feed (will retry in 5 seconds):", error);
+        container.innerHTML = '<p class="text-red-500 text-center">Failed to load news. Attempting to retry... (Error: ' + error.message + ')</p>' +
                             '<p class="text-red-500 text-center text-sm mt-2">If running locally, please ensure you are using a local server (e.g., `python -m http.server`) due to browser security restrictions (CORS).</p>';
+        setTimeout(fetchNewsFeed, 5000); // Retry after 5 seconds
     }
 }
  
@@ -904,6 +907,7 @@ async function fetchNewsFeed() {
 
     try {
         const proxyUrl = 'https://api.allorigins.win/get?url=';
+        console.log("Attempting to fetch news feed...");
         const response = await fetch(proxyUrl + encodeURIComponent(RSS_URL));
         const data = await response.json();
         const parser = new DOMParser();
@@ -928,11 +932,13 @@ async function fetchNewsFeed() {
             }
         });
         container.innerHTML = html;
+        console.log("News feed fetched successfully.");
 
     } catch (error) {
-        console.error("Error fetching or parsing RSS feed:", error);
-        container.innerHTML = '<p class="text-red-500 text-center">Failed to load news. Please try again later. (Error: ' + error.message + ')</p>' +
+        console.error("Error fetching or parsing RSS feed (will retry in 5 seconds):", error);
+        container.innerHTML = '<p class="text-red-500 text-center">Failed to load news. Attempting to retry... (Error: ' + error.message + ')</p>' +
                             '<p class="text-red-500 text-center text-sm mt-2">If running locally, please ensure you are using a local server (e.g., `python -m http.server`) due to browser security restrictions (CORS).</p>';
+        setTimeout(fetchNewsFeed, 5000); // Retry after 5 seconds
     }
 }
  
